@@ -2,21 +2,27 @@ FROM ubuntu:trusty
 
 MAINTAINER Veedubin <veedubin@comcast.net>
 
-# Install transmission-daemon package
-RUN apt-get update -y && \
-    apt-get install -y transmission-daemon && \
-    rm -rf /var/lib/apt/lists/*
-
-ADD settings.json /data/transmission/settings.json
-
 VOLUME ["/data/transmission/downloads"]
 VOLUME ["/data/transmission/torrents"]
-VOLUME ["/data/transmission/resume"]
+VOLUME ["/data/transmission/settings"]
+
+# Install transmission-daemon package
+RUN export DEBIAN_FRONTEND='noninteractive' && \
+apt-get update -qq && \
+apt-get install -qqy --no-install-recommends transmission-daemon && \
+apt-get -s dist-upgrade && \
+apt-get clean
 
 RUN chown -R debian-transmission:debian-transmission /data/transmission
+
+RUN service transmission-daemon start
+
+RUN service transmission-daemon stop
 
 USER debian-transmission
 
 EXPOSE 9091 51413/tcp 51413/udp
+
+ADD settings.json /var/lib/transmission-daemon/settings/settings.json
 
 ENTRYPOINT ["transmission-daemon", "--foreground", "--config-dir", "/data/transmission", "--log-error"]
