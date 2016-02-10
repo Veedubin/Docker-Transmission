@@ -15,10 +15,6 @@ apt-get clean
 
 RUN chown -R 1000:1000 /var/lib/transmission-daemon/
 
-RUN service transmission-daemon start
-
-RUN service transmission-daemon stop
-
 USER debian-transmission
 
 EXPOSE 9091 51413/tcp 51413/udp
