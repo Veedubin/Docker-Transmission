@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ubuntu:latest
 
 MAINTAINER Veedubin <veedubin@comcast.net>
 
@@ -13,7 +13,7 @@ apt-get install -qqy --no-install-recommends transmission-daemon && \
 apt-get -s dist-upgrade && \
 apt-get clean
 
-RUN chown -R debian-transmission:debian-transmission /data/transmission
+RUN chown -R 1000:1000 /var/lib/transmission-daemon/
 
 RUN service transmission-daemon start
 
